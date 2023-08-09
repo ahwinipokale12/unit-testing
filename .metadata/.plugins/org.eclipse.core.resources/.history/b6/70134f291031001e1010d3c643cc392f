@@ -1,0 +1,19 @@
+package com.unit_testing.mockito;
+
+public class Calculator {
+	
+	CalculaterService service;
+	
+	
+
+	public Calculator(CalculaterService service) {
+		super();
+		this.service = service;
+	}
+
+
+
+	public int perform(int i,int j) {
+		 return service.add(i, j)*i;
+	}
+}

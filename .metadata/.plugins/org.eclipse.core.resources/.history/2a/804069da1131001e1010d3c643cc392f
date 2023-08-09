@@ -1,0 +1,41 @@
+package com.unit_testing.mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.junit.Rule;
+
+import static org.mockito.Mockito.*;
+
+class CalculatorTest {
+	
+	Calculator c;
+	
+	//CalculaterService service =Mockito.mock(CalculaterService.class);
+	//or
+	
+	@Mock
+	CalculaterService service;
+	
+	@Rule public MockitoRule rule = MockitoJUnit.rule();//to tell junit about using mockito
+
+	@BeforeEach
+	public void setUp() {
+		c= new Calculator(service);
+	}
+	
+	@Test
+	public void performMethodTest() {
+		
+		when(service.add(2, 3)).thenReturn(5);//to tell perform method that use add method of customerservice
+		assertEquals(10, c.perform(2, 3));
+		verify(service.add(2, 3)); //to verfy calculor is using calculatorService method
+		
+		
+	}
+}

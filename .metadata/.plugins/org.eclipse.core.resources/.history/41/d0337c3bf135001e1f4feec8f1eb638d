@@ -1,0 +1,34 @@
+package com.unit_testing.logincredintals;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Test;
+
+class LoginServiceTest {
+
+	 @Test
+	    void testSuccessfulLogin() {
+	        LoginRepository userRepository = mock(LoginRepository.class);
+	        User user = new User("testUser", "password123");
+	        when(userRepository.findByUsername("testUser")).thenReturn(user);
+
+	        LoginService loginService = new LoginService(userRepository);
+	        boolean result = loginService.login("testUser", "password123");
+
+	        assertTrue(result);
+	    }
+	 @Test
+	    void testIncorrectPassword() {
+		 LoginRepository userRepository = mock(LoginRepository.class);
+	        User user = new User("testUser", "password123");
+	        when(userRepository.findByUsername("testUser")).thenReturn(user);
+
+	        LoginService loginService = new LoginService(userRepository);
+	        boolean result = loginService.login("testUser", "incorrectPassword");
+
+	        assertFalse(result);
+	    }
+
+}

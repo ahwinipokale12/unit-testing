@@ -1,0 +1,127 @@
+package com.unit_testing;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+class ContactManagerTest {
+
+	ContactManager contactManager;
+
+	@BeforeAll
+	public static void setUp() {
+		System.out.println("should print before all methods ");
+	}
+
+	@BeforeEach
+	public void setUpEach() {
+		contactManager = new ContactManager();
+	}
+
+	@Test
+	public void shouldTestContact() {
+
+		contactManager.addContact("Ashwini", "Munjal", "0692961525");
+		Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+		Assertions.assertEquals(1, contactManager.getAllContacts().size());
+		Assertions.assertTrue(contactManager.getAllContacts().stream()
+				.filter(contact -> contact.getFirstName().equals("Ashwini") && contact.getLastName().equals("Munjal"))
+				.findAny().isPresent());
+	}
+
+	@Test
+	@DisplayName("should not create contact with firstname has value null")
+	public void shouldThrowRunTimeExceptionWhenFirstnameIsNull() {
+
+		Assertions.assertThrows(RuntimeException.class, () -> {
+			contactManager.addContact(null, "Pokale", "0976218464");
+		});
+	}
+
+   
+     
+    
+	
+	@AfterEach
+	public void tearDown() {
+		System.out.println("should after each test");
+	}
+	
+	@Nested
+	class RepetedTest{
+		  @RepeatedTest(value=3,name = "repeating create contact list {currentRepetation} of {totalRepetation}")
+			public void shouldTestContactRepeted() {
+
+				contactManager.addContact("Ashwini", "Munjal", "0692961525");
+				Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+				Assertions.assertEquals(1, contactManager.getAllContacts().size());
+			}
+		
+	}
+	
+	@Nested
+	class ParameterizedTestClass{
+		 @DisplayName("value source:contact validation by value source")
+	     @ParameterizedTest
+	     @ValueSource(strings= {"0123456789","8692961525","0976218464"})
+	     public void shouldTestContactValidationByValeSource(String phoneNo) {
+
+	 		contactManager.addContact("Ashwini", "Munjal", phoneNo);
+	 		Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+	 		Assertions.assertEquals(1, contactManager.getAllContacts().size());
+	 	}
+	     
+	     @DisplayName("method source:contact validation by value source")
+	     @ParameterizedTest
+	     @MethodSource("phonenoList")
+	     public void shouldTestContactValidationByMethodSource(String phoneNo) {
+
+	 		contactManager.addContact("Ashwini", "Munjal", phoneNo);
+	 		Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+	 		Assertions.assertEquals(1, contactManager.getAllContacts().size());
+	 	}
+	     private static List<String>phonenoList(){
+	    	return Arrays.asList("0123456789","8692961525","0976218464");
+	     }
+	     
+	     /*
+	      * csv source i.e comma separeted value as input
+	      */
+	     @DisplayName("csv source:contact validation by csv source")
+	     @ParameterizedTest
+	     @CsvSource({"0123456789","0692961525","0976218464"})
+	     public void shouldTestContactValidationcsvSource(String phoneNo) {
+
+	  		contactManager.addContact("Ashwini", "Munjal", phoneNo);
+	  		Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+	  		Assertions.assertEquals(1, contactManager.getAllContacts().size());
+	  	}
+	     
+	     @DisplayName("csv file:contact validation by csv file")
+	     @ParameterizedTest
+	     @CsvFileSource(resources="/data.csv")
+	     public void shouldTestContactValidationcsvFile(String phoneNo) {
+
+	  		contactManager.addContact("Ashwini", "Munjal", phoneNo);
+	  		Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+	  		Assertions.assertEquals(1, contactManager.getAllContacts().size());
+	  	}
+
+		
+	}
+}
